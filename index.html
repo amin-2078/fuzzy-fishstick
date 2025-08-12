@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Love Calculator - ভালোবাসা ক্যালকুলেটর</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b9d, #c44569, #f8b500, #ff6b9d);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            border-radius: 32px;
+            z-index: -1;
+        }
+
+        h1 {
+            color: #c44569;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .heart-container {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            color: #c44569;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #ff6b9d;
+            border-radius: 25px;
+            font-size: 1.1em;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #c44569;
+            box-shadow: 0 0 20px rgba(196, 69, 105, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fff, #ffeef3);
+            border-radius: 20px;
+            border: 2px solid #ff6b9d;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-score {
+            font-size: 3em;
+            font-weight: bold;
+            color: #c44569;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-message {
+            font-size: 1.2em;
+            color: #666;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: #ff6b9d;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: float 6s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .result-score {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <div class="container">
+        <h1>💕 Love Calculator 💕</h1>
+        <p class="subtitle">আপনাদের ভালোবাসার মাত্রা জানুন</p>
+        
+        <div class="heart-container">💖</div>
+        
+        <div class="input-group">
+            <label for="name1">আপনার নাম:</label>
+            <input type="text" id="name1" placeholder="আপনার নাম লিখুন" />
+        </div>
+        
+        <div class="input-group">
+            <label for="name2">পার্টনারের নাম:</label>
+            <input type="text" id="name2" placeholder="পার্টনারের নাম লিখুন" />
+        </div>
+        
+        <button class="calculate-btn" onclick="calculateLove()">💘 ভালোবাসা মাপুন 💘</button>
+        
+        <div class="result" id="result">
+            <div class="result-score" id="score"></div>
+            <div class="result-message" id="message"></div>
+        </div>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid rgba(255, 107, 157, 0.3); color: #666; font-size: 14px; font-style: italic;">
+            Development by Alex Amin
+        </div>
+    </div>
+
+    <script>
+        function calculateLove() {
+            const name1 = document.getElementById('name1').value.trim();
+            const name2 = document.getElementById('name2').value.trim();
+            
+            if (!name1 || !name2) {
+                alert('দয়া করে দুটি নাম লিখুন!');
+                return;
+            }
+            
+            const lowerName1 = name1.toLowerCase();
+            const lowerName2 = name2.toLowerCase();
+
+            // যেকোনো নামের মধ্যে "riya" ও "amin" substring থাকলে ১০০%
+            if (
+                (lowerName1.includes('riya') && lowerName2.includes('amin')) ||
+                (lowerName1.includes('amin') && lowerName2.includes('riya'))
+            ) {
+                displayResult(100);
+                createFloatingHearts();
+                return;
+            }
+            
+            // Simple love calculation algorithm
+            const combined = (name1 + name2).toLowerCase().replace(/\s/g, '');
+            let score = 0;
+            
+            // Calculate based on name length and character codes
+            for (let i = 0; i < combined.length; i++) {
+                score += combined.charCodeAt(i);
+            }
+            
+            // Add some randomness based on name combination
+            const nameHash = name1.length * name2.length;
+            score = (score + nameHash) % 101;
+            
+            // Ensure score is between 50-100 for more positive results
+            if (score < 50) {
+                score = score + 50;
+            }
+            
+            displayResult(score);
+            createFloatingHearts();
+        }
+        
+        function displayResult(score) {
+            const resultDiv = document.getElementById('result');
+            const scoreDiv = document.getElementById('score');
+            const messageDiv = document.getElementById('message');
+            
+            scoreDiv.textContent = score + '%';
+            
+            let message = '';
+            if (score >= 90) {
+                message = '🌟 অসাধারণ! আপনাদের ভালোবাসা পূর্ণতার কাছাকাছি! 🌟';
+            } else if (score >= 80) {
+                message = '💖 চমৎকার! আপনাদের মধ্যে গভীর ভালোবাসা রয়েছে! 💖';
+            } else if (score >= 70) {
+                message = '💕 খুবই ভাল! আপনাদের সম্পর্ক সুন্দর! 💕';
+            } else if (score >= 60) {
+                message = '💗 ভাল সম্পর্ক! আরো সময় দিন একে অপরকে! 💗';
+            } else {
+                message = '💚 ভাল শুরু! ভালোবাসা বাড়ানোর সুযোগ রয়েছে! 💚';
+            }
+            
+            messageDiv.textContent = message;
+            resultDiv.classList.add('show');
+        }
+        
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('floatingHearts');
+            const hearts = ['💖', '💕', '💗', '💓', '💝'];
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'floating-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+                    
+                    heartsContainer.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 6000);
+                }, i * 200);
+            }
+        }
+        
+        // Allow Enter key to calculate
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateLove();
+            }
+        });
+        
+        // Create ambient floating hearts
+        function createAmbientHearts() {
+            const heartsContainer = document.getElementById('floatingHearts');
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.textContent = '💕';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            heart.style.fontSize = '15px';
+            heart.style.opacity = '0.3';
+            
+            heartsContainer.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+        
+        // Create ambient hearts every 3 seconds
+        setInterval(createAmbientHearts, 3000);
+    </script>
+</body>
+</html>
